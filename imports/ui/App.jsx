@@ -8,6 +8,7 @@ import { AccountsUIWrapper } from './AccountsUIWrapper';
 import { FenChessboard } from './FenChessboard';
 import { MistakeTagSelect } from './mistake/MistakeTagSelect';
 import { CHESS_MISTAKE_TAGS, findTag, findTagByLabel, getObjectTagsForList } from '../api/mistakeTags';
+import { exportCSV } from './util/exportCSV';
 
 Meteor.subscribe('mistakes');
 
@@ -106,21 +107,21 @@ export const App = () => {
 
   return (
     <div className="mx-4">
-      <div className="my-4"><AccountsUIWrapper /></div>
-      <h1 className="text-5xl font-bold mb-8">Chess Journal</h1>
+      <div className="my-4 ml-4"><AccountsUIWrapper /></div>
+      <h1 className="text-5xl font-bold mb-8 ml-4">Chess Journal</h1>
 
-      {!currentUser && <div>
+      {!currentUser && <div className="text-lg">
         Please login or create an account to start using the journal.
       </div>}
 
       {currentUser && <div>
-        <h2 className="text-xl font-bold mb-3 cursor-pointer" 
+        <h2 className="text-xl font-bold mb-3 cursor-pointer ml-4" 
           onClick={() => setFormOpen(!formOpen)}>{editingId ? 'Update' : 'Add'} Mistake
           {formOpen && <span> ⬆️</span>}
           {!formOpen && <span> ⬇️</span>}
           </h2>
 
-        {formOpen && <div className="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl" 
+        {formOpen && <div className="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl ml-4" 
             style={{maxWidth: '650px', width: '100%'}}>
           <div className="block mb-4">
             <label>FEN 
@@ -178,13 +179,13 @@ export const App = () => {
           </div>
         </div>}
         
-        <div className="block mt-4">
+        <div className="block mt-4 ml-4">
           <Button className="bg-gray-500 text-white" onClick={() => setShowAll(x => !x)}>
             {showAll ? 'Show Due' : 'Show All'}
           </Button>
         </div>
 
-        {mistakes.length === 0 && <div className="italic text-gray-600 mt-4">
+        {filteredMistakes.length === 0 && <div className="italic text-gray-600 mt-4 ml-4">
           No mistakes found.  
         </div>}
 
@@ -243,6 +244,14 @@ export const App = () => {
             </li>
           ))}
         </ul>
+
+        {filteredMistakes.length > 0 && (
+          <div>
+            <Button className="italic text-gray-600 border border-gray-600 mb-4 ml-4" onClick={() => exportCSV(filteredMistakes)}>
+              Export as CSV
+            </Button>
+          </div>
+        )}
       </div>}
     </div>
   );
