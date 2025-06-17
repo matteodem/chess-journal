@@ -12,6 +12,8 @@ Meteor.subscribe('mistakes');
 export const App = () => {
   const [fen, setFEN] = useState('');
   const [desc, setDesc] = useState('');
+  const [orientation, setOrientation] = useState('white');
+
   const [showAll, setShowAll] = useState(false);
   const [formOpen, setFormOpen] = useState()
 
@@ -22,8 +24,8 @@ export const App = () => {
   );
 
   const onAdd = async () => {
-    Meteor.call('mistakes.insert', fen, desc, (err) => {
-      if (!err) { setFEN(''); setDesc(''); }
+    Meteor.call('mistakes.insert', fen, desc, orientation, (err) => {
+      if (!err) { setFEN(''); setDesc(''); setOrientation('white'); }
       else alert(err.message);
     });
   };
@@ -56,7 +58,7 @@ export const App = () => {
           {!formOpen && <span> ⬇️</span>}
           </h2>
 
-        {formOpen && <div class="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl" 
+        {formOpen && <div className="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl" 
             style={{maxWidth: '650px', width: '100%'}}>
           <div className="block mb-4">
             <label>FEN 
@@ -66,6 +68,17 @@ export const App = () => {
           <div className="block mb-4">
             <label>Description 
               <Input className="mt-2" value={desc} onChange={e => setDesc(e.target.value)} placeholder="What has been the mistake?" />
+            </label>
+          </div>
+          <div className="block mb-4">
+            <label>
+              <div className="block">
+                Orientation
+              </div> 
+              <select className="border rounded-lg px-2 py-1" value={orientation} onChange={e => setOrientation(e.target.value)}>
+                <option value="white">White</option>
+                <option value="black">Black</option>
+              </select>
             </label>
           </div>
           <div className="inline-block">
@@ -83,13 +96,15 @@ export const App = () => {
           No mistakes found.  
         </div>}
 
-        <ul class="my-4">
+        <ul className="my-4">
           {mistakes.map(m => (
-            <li class="border rounded-lg inline-block align-top m-4" key={m._id}>
-              <FenChessboard fen={m.fen} />
+            <li className="border rounded-lg inline-block align-top m-4" key={m._id}>
+              <FenChessboard fen={m.fen} orientation={m.orientation} />
               
               <div className="m-2">
-                <div className="text-xl my-4">{m.description}</div>
+                <div className="text-xl my-4 max-w-[250px]">{m.description}</div>
+
+                <div className="text-lg mb-4">Orientation: <span className="font-bold">{m.orientation}</span></div>
                 
                 <div className="text-blue-800">
                   Next review: {m.nextReview.toLocaleDateString()}

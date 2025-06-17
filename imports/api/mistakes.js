@@ -9,6 +9,7 @@ Mistakes.schema = new SimpleSchema({
   userId: { type: String },
   fen: { type: String },              // FEN string
   description: { type: String },       // Error description
+  orientation: { type: String },
   createdAt: { type: Date },
   nextReview: { type: Date },          // For Spaced Repetition
   interval: { type: Number, defaultValue: 1 }, // Days until next review
@@ -16,19 +17,19 @@ Mistakes.schema = new SimpleSchema({
 
 // Methods
 Meteor.methods({
-  async 'mistakes.insert'(fen, description) {
+  async 'mistakes.insert'(fen, description, orientation) {
     if (!this.userId) throw new Meteor.Error('Not authorized');
     const now = new Date();
 
     fen = fen.trim();
     description = description.trim();
 
-    if (description.length > 0 && fen.length > 0) {
-      console.log({ fen, description });
+    if (description.length > 0 && fen.length > 0 && orientation.length > 0) {
       await Mistakes.insertAsync({
         userId: this.userId,
         fen,
         description,
+        orientation,
         createdAt: now,
         nextReview: now, // Review immediately
         interval: 1
@@ -47,8 +48,6 @@ Meteor.methods({
         interval: newInterval
       }
     });
-
-    console.log('reviewed succesfully', await Mistakes.findOneAsync({ _id: mistakeId }))
   },
   async 'mistakes.remove'(mistakeId) {
     if (!this.userId) throw new Meteor.Error('Not authorized');
