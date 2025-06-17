@@ -6,6 +6,8 @@ import { Input } from './base/Input';
 import { Button } from './base/Button';
 import { AccountsUIWrapper } from './AccountsUIWrapper';
 import { FenChessboard } from './FenChessboard';
+import { MistakeTagSelect } from './mistake/MistakeTagSelect';
+import { CHESS_MISTAKE_TAGS, findTag, findTagByLabel } from '../api/mistakeTags';
 
 Meteor.subscribe('mistakes');
 
@@ -13,6 +15,11 @@ export const App = () => {
   const [fen, setFEN] = useState('');
   const [desc, setDesc] = useState('');
   const [orientation, setOrientation] = useState('white');
+  const [tags, setTags] = useState([]);
+  const [filterTag, setFilterTag] = useState('');
+
+  // To reload mistake tag select
+  const [mistakeTagSeed, setMistakeTagSeed] = useState(1);
 
   const [showAll, setShowAll] = useState(false);
   const [formOpen, setFormOpen] = useState()
@@ -23,10 +30,20 @@ export const App = () => {
     Mistakes.find(showAll ? {} : { nextReview: { $lte: new Date() } }, { sort: { nextReview: 1 } }).fetch()
   );
 
+  const filteredMistakes = !filterTag
+  ? mistakes
+  : mistakes.filter(m => m.tags && m.tags.includes(filterTag));
+
   const onAdd = async () => {
-    Meteor.call('mistakes.insert', fen, desc, orientation, (err) => {
-      if (!err) { setFEN(''); setDesc(''); setOrientation('white'); }
-      else alert(err.message);
+    Meteor.call('mistakes.insert', fen, desc, orientation, tags, (err) => {
+      if (!err) { 
+        setFEN(''); 
+        setDesc(''); 
+        setOrientation('white'); 
+        setTags([]); 
+        setMistakeTagSeed(Math.random());
+        setFormOpen(false);
+      } else alert(err.message);
     });
   };
 
@@ -81,6 +98,15 @@ export const App = () => {
               </select>
             </label>
           </div>
+          <div className="mb-4">
+            <label>
+              Tags
+
+              <div className="block mt-2">
+                <MistakeTagSelect key={mistakeTagSeed} onChange={(values) => setTags(values.map(val => val.value))} />
+              </div>
+            </label>
+          </div>
           <div className="inline-block">
             <Button className="bg-purple-700 text-white" onClick={onAdd}>Add Mistake</Button>
           </div>
@@ -96,8 +122,17 @@ export const App = () => {
           No mistakes found.  
         </div>}
 
+        {filterTag && (
+        <div className="text-xl font-semibold mt-8">
+          Filtered by:
+          &nbsp;
+          <span className="font-bold">{findTag(filterTag)?.label || filterTag}</span>
+          &nbsp;
+          <span className="cursor-pointer" onClick={() => setFilterTag('')}>❌</span>
+        </div>)}
+
         <ul className="my-4">
-          {mistakes.map(m => (
+          {filteredMistakes.map(m => (
             <li className="border rounded-lg inline-block align-top m-4" key={m._id}>
               <FenChessboard fen={m.fen} orientation={m.orientation} />
               
@@ -105,6 +140,18 @@ export const App = () => {
                 <div className="text-xl my-4 max-w-[250px]">{m.description}</div>
 
                 <div className="text-lg mb-4">Orientation: <span className="font-bold">{m.orientation}</span></div>
+
+                {m.tags && m.tags.length > 0 && (
+                  <div className="text-sm mb-4 text-gray-500">
+                    Tags:&nbsp;
+                    {m.tags.map(tag =>
+                      (CHESS_MISTAKE_TAGS.find(t => t.value === tag)?.label || tag)
+                    ).map(tag => (<div 
+                      className="underline cursor-pointer" 
+                      onClick={() => setFilterTag(findTagByLabel(tag)?.value || tag)}>{tag}</div>))}
+                  </div>
+                )}
+                
                 
                 <div className="text-blue-800">
                   Next review: {m.nextReview.toLocaleDateString()}

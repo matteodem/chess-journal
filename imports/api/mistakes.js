@@ -10,6 +10,8 @@ Mistakes.schema = new SimpleSchema({
   fen: { type: String },              // FEN string
   description: { type: String },       // Error description
   orientation: { type: String },
+  tags: { type: Array, optional: true },            
+  'tags.$': { type: String },                       
   createdAt: { type: Date },
   nextReview: { type: Date },          // For Spaced Repetition
   interval: { type: Number, defaultValue: 1 }, // Days until next review
@@ -17,7 +19,7 @@ Mistakes.schema = new SimpleSchema({
 
 // Methods
 Meteor.methods({
-  async 'mistakes.insert'(fen, description, orientation) {
+  async 'mistakes.insert'(fen, description, orientation, tags = []) {
     if (!this.userId) throw new Meteor.Error('Not authorized');
     const now = new Date();
 
@@ -30,6 +32,7 @@ Meteor.methods({
         fen,
         description,
         orientation,
+        tags,
         createdAt: now,
         nextReview: now, // Review immediately
         interval: 1
