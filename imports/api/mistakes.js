@@ -19,14 +19,21 @@ Meteor.methods({
   async 'mistakes.insert'(fen, description) {
     if (!this.userId) throw new Meteor.Error('Not authorized');
     const now = new Date();
-    await Mistakes.insertAsync({
-      userId: this.userId,
-      fen,
-      description,
-      createdAt: now,
-      nextReview: now, // Review immediately
-      interval: 1
-    });
+
+    fen = fen.trim();
+    description = description.trim();
+
+    if (description.length > 0 && fen.length > 0) {
+      console.log({ fen, description });
+      await Mistakes.insertAsync({
+        userId: this.userId,
+        fen,
+        description,
+        createdAt: now,
+        nextReview: now, // Review immediately
+        interval: 1
+      });
+    }
   },
   async 'mistakes.reviewed'(mistakeId, correct) {
     if (!this.userId) throw new Meteor.Error('Not authorized');
