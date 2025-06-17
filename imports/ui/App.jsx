@@ -32,6 +32,14 @@ export const App = () => {
     Meteor.call('mistakes.reviewed', id, correct);
   };
 
+  const onDelete = (id) => {
+    if (window.confirm('Really delete this mistake?')) {
+      Meteor.call('mistakes.remove', id, (err) => {
+        if (err) alert(err.reason);
+      });
+    }
+  };
+
   return (
     <div className="mx-4">
       <div className="my-4"><AccountsUIWrapper /></div>
@@ -91,6 +99,10 @@ export const App = () => {
                   I got it:&nbsp;
                   <Button className="text-white bg-green-700 mr-4" onClick={() => onReview(m._id, true)}>Correct ✅</Button>
                   <Button className="text-red-700 border-red-700 border-2" onClick={() => onReview(m._id, false)}>Wrong ❌</Button>
+                </div>
+
+                <div className="mt-4">
+                  <Button className="text-white bg-red-700" onClick={() => onDelete(m._id)}>Delete</Button>
                 </div>
               </div>
             </li>
