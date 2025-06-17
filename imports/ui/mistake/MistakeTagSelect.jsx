@@ -8,6 +8,7 @@ export const MistakeTagSelect = ({ tags, ...props }) => {
     defaultValue={tags}
     isMulti={true} 
     isClearable={true}
+    classNamePrefix="mistake-tag-select"
     {...props}
   />
 };

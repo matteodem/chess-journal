@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+/* Override react-select styles */
+.mistake-tag-select__menu {
+  z-index: 1000;
+}
