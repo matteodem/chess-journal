@@ -7,9 +7,11 @@ import { Button } from './base/Button';
 import { AccountsUIWrapper } from './AccountsUIWrapper';
 import { FenChessboard } from './FenChessboard';
 import { MistakeTagSelect } from './mistake/MistakeTagSelect';
-import { CHESS_MISTAKE_TAGS, findTag, findTagByLabel } from '../api/mistakeTags';
+import { CHESS_MISTAKE_TAGS, findTag, findTagByLabel, getObjectTagsForList } from '../api/mistakeTags';
 
 Meteor.subscribe('mistakes');
+
+const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
 export const App = () => {
   const [fen, setFEN] = useState('');
@@ -17,6 +19,9 @@ export const App = () => {
   const [orientation, setOrientation] = useState('white');
   const [tags, setTags] = useState([]);
   const [filterTag, setFilterTag] = useState('');
+
+  // For editing 
+  const [editingId, setEditingId] = useState(null); // null = create, otherwise = Mistake _id
 
   // To reload mistake tag select
   const [mistakeTagSeed, setMistakeTagSeed] = useState(1);
@@ -34,17 +39,56 @@ export const App = () => {
   ? mistakes
   : mistakes.filter(m => m.tags && m.tags.includes(filterTag));
 
-  const onAdd = async () => {
-    Meteor.call('mistakes.insert', fen, desc, orientation, tags, (err) => {
-      if (!err) { 
-        setFEN(''); 
-        setDesc(''); 
-        setOrientation('white'); 
-        setTags([]); 
-        setMistakeTagSeed(Math.random());
-        setFormOpen(false);
-      } else alert(err.message);
-    });
+  const onSubmit = () => {
+    if (editingId) {
+      Meteor.call(
+        'mistakes.update',
+        editingId,
+        fen,
+        desc,
+        orientation,
+        tags,
+        (err) => {
+          if (!err) {
+            setEditingId(null);
+            setFEN('');
+            setDesc('');
+            setOrientation('white');
+            setTags([]);
+            setMistakeTagSeed(Math.random());
+            setFormOpen(false);
+          } else alert(err.reason);
+        }
+      );
+    } else {
+      Meteor.call(
+        'mistakes.insert',
+        fen,
+        desc,
+        orientation,
+        tags,
+        (err) => {
+          if (!err) {
+            setFEN(''); 
+            setDesc(''); 
+            setOrientation('white'); 
+            setTags([]); 
+            setMistakeTagSeed(Math.random());
+            setFormOpen(false);
+          } else alert(err.reason);
+        }
+      );
+    }
+  };
+
+  const onEdit = (mistake) => {
+    setEditingId(mistake._id);
+    setFEN(mistake.fen);
+    setDesc(mistake.description);
+    setOrientation(mistake.orientation);
+    setTags(mistake.tags || []);
+    setFormOpen(true);
+    scrollToTop();
   };
 
   const onReview = async  (id, correct) => {
@@ -55,6 +99,7 @@ export const App = () => {
     if (window.confirm('Really delete this mistake?')) {
       Meteor.call('mistakes.remove', id, (err) => {
         if (err) alert(err.reason);
+        scrollToTop();
       });
     }
   };
@@ -70,7 +115,7 @@ export const App = () => {
 
       {currentUser && <div>
         <h2 className="text-xl font-bold mb-3 cursor-pointer" 
-          onClick={() => setFormOpen(!formOpen)}>Add mistake
+          onClick={() => setFormOpen(!formOpen)}>{editingId ? 'Update' : 'Add'} Mistake
           {formOpen && <span> ⬆️</span>}
           {!formOpen && <span> ⬇️</span>}
           </h2>
@@ -103,12 +148,33 @@ export const App = () => {
               Tags
 
               <div className="block mt-2">
-                <MistakeTagSelect key={mistakeTagSeed} onChange={(values) => setTags(values.map(val => val.value))} />
+                <MistakeTagSelect 
+                  key={mistakeTagSeed} 
+                  tags={getObjectTagsForList(tags)}
+                  onChange={(values) => setTags(values.map(val => val.value))} />
               </div>
             </label>
           </div>
           <div className="inline-block">
-            <Button className="bg-purple-700 text-white" onClick={onAdd}>Add Mistake</Button>
+            <Button className="bg-purple-700 text-white" onClick={onSubmit}>
+              {editingId ? 'Update' : 'Add'} Mistake
+            </Button>
+
+            {editingId && (
+              <Button
+                onClick={() => {
+                  setEditingId(null);
+                  setFEN('');
+                  setDesc('');
+                  setOrientation('white');
+                  setTags([]);
+                  setMistakeTagSeed(Math.random());
+                }}
+                style={{ marginLeft: 10 }}
+              >
+                Cancel
+              </Button>
+            )}
           </div>
         </div>}
         
@@ -128,18 +194,21 @@ export const App = () => {
           &nbsp;
           <span className="font-bold">{findTag(filterTag)?.label || filterTag}</span>
           &nbsp;
-          <span className="cursor-pointer" onClick={() => setFilterTag('')}>❌</span>
+          <span className="cursor-pointer" onClick={() => {
+            setFilterTag('');
+            scrollToTop();
+          }}>❌</span>
         </div>)}
 
-        <ul className="my-4">
+        <ul className="my-4 flex flex-wrap">
           {filteredMistakes.map(m => (
-            <li className="border rounded-lg inline-block align-top m-4" key={m._id}>
+            <li className="border rounded-lg align-top m-4" key={m._id}>
               <FenChessboard fen={m.fen} orientation={m.orientation} />
               
               <div className="m-2">
                 <div className="text-xl my-4 max-w-[250px]">{m.description}</div>
 
-                <div className="text-lg mb-4">Orientation: <span className="font-bold">{m.orientation}</span></div>
+                <div className="text-md mb-4">Orientation: <span className="font-bold capitalize">{m.orientation}</span></div>
 
                 {m.tags && m.tags.length > 0 && (
                   <div className="text-sm mb-4 text-gray-500">
@@ -148,12 +217,15 @@ export const App = () => {
                       (CHESS_MISTAKE_TAGS.find(t => t.value === tag)?.label || tag)
                     ).map(tag => (<div 
                       className="underline cursor-pointer" 
-                      onClick={() => setFilterTag(findTagByLabel(tag)?.value || tag)}>{tag}</div>))}
+                      onClick={() => {
+                        setFilterTag(findTagByLabel(tag)?.value || tag);
+                        scrollToTop();
+                      }}>{tag}</div>))}
                   </div>
                 )}
                 
                 
-                <div className="text-blue-800">
+                <div className="text-blue-800 font-bold">
                   Next review: {m.nextReview.toLocaleDateString()}
                 </div>
 
@@ -164,7 +236,8 @@ export const App = () => {
                 </div>
 
                 <div className="mt-4">
-                  <Button className="text-white bg-red-700" onClick={() => onDelete(m._id)}>Delete</Button>
+                  <Button className="text-white bg-red-700 mr-2" onClick={() => onDelete(m._id)}>Delete</Button>
+                  <Button className="text-white bg-blue-700" onClick={() => onEdit(m)}>Edit</Button>
                 </div>
               </div>
             </li>

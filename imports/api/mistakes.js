@@ -39,6 +39,19 @@ Meteor.methods({
       });
     }
   },
+  async 'mistakes.update'(mistakeId, fen, description, orientation, tags) {
+    if (!this.userId) throw new Meteor.Error('Not authorized');
+    const mistake = await Mistakes.findOneAsync({ _id: mistakeId, userId: this.userId });
+    if (!mistake) throw new Meteor.Error('Not found');
+    await Mistakes.updateAsync(mistakeId, {
+      $set: {
+        fen,
+        description,
+        orientation,
+        tags
+      }
+    });
+  },
   async 'mistakes.reviewed'(mistakeId, correct) {
     if (!this.userId) throw new Meteor.Error('Not authorized');
     const mistake = await Mistakes.findOneAsync({ _id: mistakeId, userId: this.userId });

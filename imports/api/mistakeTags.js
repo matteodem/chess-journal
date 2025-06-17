@@ -1,3 +1,12 @@
+export const getObjectTagsForList = (list) => {
+  return list.map((value) => {
+    return {
+      value,
+      label: findTag(value)?.label
+    }
+  }, [])
+}
+
 export const findTag = (value) => {
   return CHESS_MISTAKE_TAGS.find((tag) => tag.value === value)
 }
