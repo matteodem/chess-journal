@@ -100,14 +100,22 @@ export const App = () => {
     if (window.confirm('Really delete this mistake?')) {
       Meteor.call('mistakes.remove', id, (err) => {
         if (err) alert(err.reason);
+
+        setEditingId(null);
+        setFEN('');
+        setDesc('');
+        setOrientation('white');
+        setTags([]);
+        setMistakeTagSeed(Math.random());
+        setFormOpen(false);
         scrollToTop();
       });
     }
   };
 
   return (
-    <div className="mx-4">
-      <div className="my-4 ml-4"><AccountsUIWrapper /></div>
+    <div className="min-h-screen bg-gray-100 relative top-0 left-0">
+      <div className="py-4 pl-4"><AccountsUIWrapper /></div>
       <h1 className="text-5xl font-bold mb-8 ml-4">Chess Journal</h1>
 
       {!currentUser && <div className="text-lg">
@@ -186,11 +194,11 @@ export const App = () => {
         </div>
 
         {filteredMistakes.length === 0 && <div className="italic text-gray-600 mt-4 ml-4">
-          No mistakes found.  
+          No unreviewed mistakes found.  
         </div>}
 
         {filterTag && (
-        <div className="text-xl font-semibold mt-8">
+        <div className="text-xl font-semibold mt-8 ml-4">
           Filtered by:
           &nbsp;
           <span className="font-bold">{findTag(filterTag)?.label || filterTag}</span>
@@ -253,6 +261,11 @@ export const App = () => {
           </div>
         )}
       </div>}
+
+      <div className="mt-24 w-full bg-gray-500 text-gray-200 p-4 absolute bottom-0 left-0">
+        Created by <a className="underline" href="https://github.com/matteodem">@matteodem</a>.
+        Consider donating by <a className="underline" href="https://ko-fi.com/itsmatteodemicheli">buying me a coffee</a>.
+      </div>
     </div>
   );
 };

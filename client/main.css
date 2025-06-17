@@ -2,5 +2,5 @@
 
 /* Override react-select styles */
 .mistake-tag-select__menu {
-  z-index: 1000;
+  z-index: 10000 !important;
 }
