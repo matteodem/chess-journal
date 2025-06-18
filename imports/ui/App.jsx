@@ -194,7 +194,7 @@ export const App = () => {
         </div>
 
         {filteredMistakes.length === 0 && <div className="italic text-gray-600 mt-4 ml-4">
-          No unreviewed mistakes found.  
+          No mistakes found.  
         </div>}
 
         {filterTag && (
@@ -211,7 +211,7 @@ export const App = () => {
 
         <ul className="my-4 flex flex-wrap">
           {filteredMistakes.map(m => (
-            <li className="border rounded-lg align-top m-4" key={m._id}>
+            <li className="border-2 border-gray-300 shadow-lg rounded-lg align-top m-4" key={m._id}>
               <FenChessboard fen={m.fen} orientation={m.orientation} />
               
               <div className="m-2">
