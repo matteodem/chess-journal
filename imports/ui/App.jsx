@@ -20,6 +20,7 @@ export const App = () => {
   const [orientation, setOrientation] = useState('white');
   const [tags, setTags] = useState([]);
   const [filterTag, setFilterTag] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // For editing 
   const [editingId, setEditingId] = useState(null); // null = create, otherwise = Mistake _id
@@ -36,9 +37,24 @@ export const App = () => {
     Mistakes.find(showAll ? {} : { nextReview: { $lte: new Date() } }, { sort: { nextReview: 1 } }).fetch()
   );
 
-  const filteredMistakes = !filterTag
-  ? mistakes
-  : mistakes.filter(m => m.tags && m.tags.includes(filterTag));
+  const filteredMistakes = mistakes.filter(m => {
+    // Tag-Filter (falls verwendet, sonst ignoriere den Teil)
+    if (filterTag && (!m.tags || !m.tags.includes(filterTag))) return false;
+
+    // Suchfeld (case-insensitive in Beschreibung, FEN oder Tag-Label)
+    if (!searchTerm) return true;
+    const lower = searchTerm.toLowerCase();
+    return (
+      m.description.toLowerCase().includes(lower) ||
+      m.fen.toLowerCase().includes(lower) ||
+      (m.tags &&
+        m.tags.some(
+          tag =>
+            tag.toLowerCase().includes(lower) ||
+            (CHESS_MISTAKE_TAGS.find(t => t.value === tag)?.label?.toLowerCase().includes(lower))
+        ))
+    );
+  });
 
   const onSubmit = () => {
     if (editingId) {
@@ -128,6 +144,14 @@ export const App = () => {
           {formOpen && <span> ⬆️</span>}
           {!formOpen && <span> ⬇️</span>}
           </h2>
+
+        <Input
+          type="search"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          placeholder="Search Mistakes..."
+          className="border rounded p-2 ml-4 max-w-md"
+        />
 
         {formOpen && <div className="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl ml-4" 
             style={{maxWidth: '650px', width: '100%'}}>
