@@ -9,7 +9,7 @@ import { exportCSV } from '../util/exportCSV';
 import { Link } from 'react-router-dom';
 import { Input } from '../base/Input';
 
-Meteor.subscribe('mistakes');
+Meteor.subscribe('mistakes.all');
 
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 

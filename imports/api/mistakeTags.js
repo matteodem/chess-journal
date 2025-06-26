@@ -63,5 +63,6 @@ export const CHESS_MISTAKE_TAGS = [
   { value: 'blindspot', label: 'Blindspot' },
   { value: 'pattern-missed', label: 'Pattern Missed' },
   { value: 'emotional-mistake', label: 'Emotional Mistake (Tilt)' },
-  { value: 'distraction', label: 'Distraction' }
+  { value: 'distraction', label: 'Distraction' },
+  { value: 'sacrifice', label: 'Sacrifice' },
 ];
