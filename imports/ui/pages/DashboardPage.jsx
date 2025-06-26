@@ -77,12 +77,12 @@ export const DashboardPage = () => {
 
   return (
     <div>
-      <div className="flex">
+      <div className="flex flex-wrap">
         <FenChessboard fen={mistake.fen} orientation={mistake.orientation} isLarge={true} />
 
         <div class="grow">
           {!showMistake && (
-            <div className="mt-4 ml-12">
+            <div className="mt-4 ml-0 md:ml-12">
               <span className="text-xl font-bold">I got it:&nbsp;</span>
               <div className="block mt-4">
 <Button className="text-white bg-green-700 mr-4" onClick={() => onReview(mistake._id, true)}>Correct ✅</Button>
