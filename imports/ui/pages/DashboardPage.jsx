@@ -52,13 +52,14 @@ export const DashboardPage = () => {
         </Button>)}
         {dueMistakes.length === 0 && <p className="italic text-gray-600 mt-4">No mistakes due for review.</p>}
 
-        <div className="mt-8">
+        {(dueMistakes.length === 0 && allMistakes.length > 0) && (<div className="mt-8">
             <h2 className="text-2xl font-bold">Overtrain</h2>
             <p className="italic text-gray-600 mt-2">Practice all your mistakes, even those not due for review.</p>
             <Button className="bg-blue-700 text-white mt-4" onClick={() => startPractice(allMistakes)} disabled={allMistakes.length === 0}>
               Overtrain ({allMistakes.length})
             </Button>
-        </div>
+        </div>)}
+        
       </div>
     );
   }
