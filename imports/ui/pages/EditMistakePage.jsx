@@ -7,6 +7,7 @@ import { MistakeTagSelect } from '../mistake/MistakeTagSelect';
 import { getObjectTagsForList } from '../../api/mistakeTags';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Mistakes } from '../../api/mistakes';
+import { FenChessboard } from '../FenChessboard';
 
 export const EditMistakePage = () => {
   const { id } = useParams();
@@ -57,6 +58,9 @@ export const EditMistakePage = () => {
         <label>FEN 
           <Input className="mt-2" value={fen} onChange={e => setFEN(e.target.value)} placeholder="rnbqkbnr/..." />
         </label>
+      </div>
+      <div className="block mb-4">
+        <FenChessboard fen={fen} orientation={orientation} />
       </div>
       <div className="block mb-4">
         <label>Description 
