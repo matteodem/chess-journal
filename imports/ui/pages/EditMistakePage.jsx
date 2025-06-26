@@ -41,7 +41,7 @@ export const EditMistakePage = () => {
     );
 
     if (!err) {
-      navigate('/');
+      navigate('/list');
     } else alert(err.reason);
   };
 

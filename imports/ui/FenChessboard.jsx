@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import Chessboard from 'chessboardjsx';
 
-export const FenChessboard = ({ fen, orientation }) => {
-  return <Chessboard position={fen} width={300} orientation={orientation} />
+export const FenChessboard = ({ fen, orientation, isLarge }) => {
+  return <Chessboard position={fen} width={isLarge ? 450 : 300} orientation={orientation} />
 };

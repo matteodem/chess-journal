@@ -30,7 +30,7 @@ export const AddMistakePage = () => {
   return (
     <div className="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl" 
         style={{maxWidth: '650px', width: '100%'}}>
-      <h2 className="text-2xl font-bold mb-4">Add Mistake</h2>
+      <h2 className="text-4xl font-bold mb-4">Add Mistake</h2>
       <div className="block mb-4">
         <label>FEN 
           <Input className="mt-2" value={fen} onChange={e => setFEN(e.target.value)} placeholder="rnbqkbnr/..." />
