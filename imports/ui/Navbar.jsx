@@ -1,15 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const Navbar = () => {
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="mx-auto flex justify-between items-center">
-        <div className="flex space-x-4">
-          <a href="/" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Dashboard</a>
-          <a href="/add" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Add Mistake</a>
-          <a href="/list" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Mistakes List</a>
-          <a href="/statistics" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Statistics</a>
-          <a href="https://ko-fi.com/itsmatteodemicheli" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Donate</a>
+    <nav className="bg-white shadow-sm py-4">
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <div className="flex space-x-6">
+          <Link to="/" className="text-gray-700 hover:text-indigo-600 text-base font-medium transition-colors duration-200">Dashboard</Link>
+          <Link to="/add" className="text-gray-700 hover:text-indigo-600 text-base font-medium transition-colors duration-200">Add Mistake</Link>
+          <Link to="/list" className="text-gray-700 hover:text-indigo-600 text-base font-medium transition-colors duration-200">Mistakes List</Link>
+          <Link to="/statistics" className="text-gray-700 hover:text-indigo-600 text-base font-medium transition-colors duration-200">Statistics</Link>
+          <a href="https://ko-fi.com/itsmatteodemicheli" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-indigo-600 text-base font-medium transition-colors duration-200">Donate</a>
         </div>
       </div>
     </nav>

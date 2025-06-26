@@ -29,46 +29,63 @@ export const AddMistakePage = () => {
   };
 
   return (
-    <div className="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl" 
-        style={{maxWidth: '650px', width: '100%'}}>
-      <h2 className="text-4xl font-bold mb-4">Add Mistake</h2>
-      <div className="block mb-4">
-        <label>FEN 
-          <Input className="mt-2" value={fen} onChange={e => setFEN(e.target.value)} placeholder="rnbqkbnr/..." />
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-2xl mx-auto">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Add New Mistake</h2>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fen">
+          FEN
         </label>
-      </div>
-      <div className="block mb-4">
-        <FenChessboard fen={fen} orientation={orientation} />
-      </div>
-      <div className="block mb-4">
-        <label>Description 
-          <Input className="mt-2" value={desc} onChange={e => setDesc(e.target.value)} placeholder="What has been the mistake?" />
-        </label>
-      </div>
-      <div className="block mb-4">
-        <label>
-          <div className="block">
-            Orientation
-          </div> 
-          <select className="border rounded-lg px-2 py-1" value={orientation} onChange={e => setOrientation(e.target.value)}>
-            <option value="white">White</option>
-            <option value="black">Black</option>
-          </select>
-        </label>
+        <Input
+          id="fen"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          value={fen}
+          onChange={e => setFEN(e.target.value)}
+          placeholder="rnbqkbnr/..."
+        />
       </div>
       <div className="mb-4">
-        <label>
-          Tags
-
-          <div className="block mt-2">
-            <MistakeTagSelect 
-              tags={getObjectTagsForList(tags)}
-              onChange={(values) => setTags(values.map(val => val.value))} />
-          </div>
-        </label>
+        <FenChessboard fen={fen} orientation={orientation} />
       </div>
-      <div className="inline-block">
-        <Button className="bg-purple-700 text-white" onClick={onSubmit}>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+          Description
+        </label>
+        <Input
+          id="description"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          value={desc}
+          onChange={e => setDesc(e.target.value)}
+          placeholder="What has been the mistake?"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="orientation">
+          Orientation
+        </label>
+        <select
+          id="orientation"
+          className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          value={orientation}
+          onChange={e => setOrientation(e.target.value)}
+        >
+          <option value="white">White</option>
+          <option value="black">Black</option>
+        </select>
+      </div>
+      <div className="mb-6">
+        <label className="block text-gray-700 text-sm font-bold mb-2">
+          Tags
+        </label>
+        <MistakeTagSelect
+          tags={getObjectTagsForList(tags)}
+          onChange={(values) => setTags(values.map(val => val.value))}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <Button
+          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          onClick={onSubmit}
+        >
           Add Mistake
         </Button>
       </div>

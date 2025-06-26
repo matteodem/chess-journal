@@ -45,30 +45,33 @@ export const DashboardPage = () => {
 
   if (!practicing) {
     return (
-      <div>
-        <h2 className="text-4xl font-bold">Mistakes Due for Review</h2>
-        {dueMistakes.length > 0 && (<Button className="bg-violet-700 text-white mt-4" onClick={() => startPractice(dueMistakes)} disabled={dueMistakes.length === 0}>
-          Practice ({dueMistakes.length})
-        </Button>)}
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Mistakes Due for Review</h2>
+        {dueMistakes.length > 0 && (
+          <Button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors duration-200" onClick={() => startPractice(dueMistakes)} disabled={dueMistakes.length === 0}>
+            Practice ({dueMistakes.length})
+          </Button>
+        )}
         {dueMistakes.length === 0 && <p className="italic text-gray-600 mt-4">No mistakes due for review.</p>}
 
-        {(dueMistakes.length === 0 && allMistakes.length > 0) && (<div className="mt-8">
-            <h2 className="text-2xl font-bold">Overtrain</h2>
-            <p className="italic text-gray-600 mt-2">Practice all your mistakes, even those not due for review.</p>
-            <Button className="bg-blue-700 text-white mt-4" onClick={() => startPractice(allMistakes)} disabled={allMistakes.length === 0}>
+        {(dueMistakes.length === 0 && allMistakes.length > 0) && (
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">Overtrain</h2>
+            <p className="italic text-gray-600 mb-4">Practice all your mistakes, even those not due for review.</p>
+            <Button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200" onClick={() => startPractice(allMistakes)} disabled={allMistakes.length === 0}>
               Overtrain ({allMistakes.length})
             </Button>
-        </div>)}
-        
+          </div>
+        )}
       </div>
     );
   }
 
   if (mistakes.length === 0) {
     return (
-      <div>
-        <p className="italic text-gray-600 mt-4">No mistakes to practice.</p>
-        <Button onClick={() => setPracticing(false)}>Back</Button>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p className="italic text-gray-600 mb-4">No mistakes to practice.</p>
+        <Button className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 transition-colors duration-200" onClick={() => setPracticing(false)}>Back</Button>
       </div>
     );
   }
@@ -76,52 +79,54 @@ export const DashboardPage = () => {
   const mistake = mistakes[currentMistakeIndex];
 
   return (
-    <div>
-      <div className="flex flex-wrap">
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="flex flex-col md:flex-row items-center md:items-start">
         <FenChessboard fen={mistake.fen} orientation={mistake.orientation} isLarge={true} />
 
-        <div class="grow">
+        <div className="flex-grow mt-6 md:mt-0 md:ml-12 w-full">
           {!showMistake && (
-            <div className="mt-4 ml-0 md:ml-12">
-              <span className="text-xl font-bold">I got it:&nbsp;</span>
-              <div className="block mt-4">
-<Button className="text-white bg-green-700 mr-4" onClick={() => onReview(mistake._id, true)}>Correct ✅</Button>
-              <Button className="text-red-700 border-red-700 border-2" onClick={() => onReview(mistake._id, false)}>Wrong ❌</Button>
+            <div className="text-center md:text-left">
+              <span className="text-xl font-semibold text-gray-800">I got it:&nbsp;</span>
+              <div className="mt-4 space-x-4">
+                <Button className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors duration-200 text-lg" onClick={() => onReview(mistake._id, true)}>Correct ✅</Button>
+                <Button className="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition-colors duration-200 text-lg" onClick={() => onReview(mistake._id, false)}>Wrong ❌</Button>
               </div>
             </div>
           )}
 
           {showMistake && (
-            <div className="m-2 ml-12">
-              <div className="text-2xl mb-4">{mistake.description}</div>
+            <div className="text-center md:text-left">
+              <div className="text-2xl font-bold text-gray-800 mb-4">{mistake.description}</div>
 
-              <div className="text-md mb-4">Orientation: <span className="font-bold capitalize">{mistake.orientation}</span></div>
+              <div className="text-md text-gray-700 mb-2">Orientation: <span className="font-semibold capitalize">{mistake.orientation}</span></div>
 
               {mistake.tags && mistake.tags.length > 0 && (
-                <div className="text-sm mb-4 text-gray-500">
+                <div className="text-sm text-gray-500 mb-4">
                   Tags:&nbsp;
-                  {mistake.tags.map(tag =>
-                    (CHESS_MISTAKE_TAGS.find(t => t.value === tag)?.label || tag)
-                  ).map(tag => (<div
-                    className="underline"
-                    key={tag}>{tag}</div>))}
+                  <div className="flex flex-wrap justify-center md:justify-start mt-1">
+                    {mistake.tags.map(tag =>
+                      (CHESS_MISTAKE_TAGS.find(t => t.value === tag)?.label || tag)
+                    ).map(tag => (
+                      <span
+                        className="bg-gray-200 text-gray-700 text-xs font-medium mr-2 mb-2 px-2.5 py-0.5 rounded-full"
+                        key={tag}>{tag}</span>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              <div className="text-violet-900 font-bold">
+              <div className="text-indigo-700 font-semibold mb-4">
                 Next review: {mistake.nextReview.toLocaleDateString()}
               </div>
 
-              <div className="mt-2">
-                <Button className="bg-violet-700 text-white mt-4" onClick={onNext}>Next</Button>
+              <div className="mt-4">
+                <Button className="bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition-colors duration-200 text-lg" onClick={onNext}>Next</Button>
               </div>
             </div>
           )}
         </div>
       </div>
-      
-
-      
     </div>
   );
 };
+

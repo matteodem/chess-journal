@@ -14,5 +14,5 @@ export const AccountsUIWrapper = () => {
     };
   }, []);
 
-  return <span ref={container} />;
+  return <div className="mb-4" ref={container} />;
 };

@@ -15,24 +15,27 @@ export const App = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100 relative top-0 left-0">
+      <div className="min-h-screen bg-gray-50 flex flex-col">
         {currentUser && <Navbar />}
-        <div className="py-4 pl-4"><AccountsUIWrapper /></div>
+        <div className="container mx-auto px-4 py-8 flex-grow">
+          <div className="mb-4"><AccountsUIWrapper /></div>
 
-        {!currentUser && <div className="text-lg ml-4">
-          Please login or create an account to start using the journal.
-        </div>}
+          {!currentUser && <div className="text-lg text-center mt-8">
+            Please login or create an account to start using the journal.
+          </div>}
 
-        {currentUser && <div className="ml-4">
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/add" element={<AddMistakePage />} />
-            <Route path="/edit/:id" element={<EditMistakePage />} />
-            <Route path="/list" element={<ListMistakesPage />} />
-            <Route path="/statistics" element={<StatisticsPage />} />
-          </Routes>
-        </div>}
+          {currentUser && (
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/add" element={<AddMistakePage />} />
+              <Route path="/edit/:id" element={<EditMistakePage />} />
+              <Route path="/list" element={<ListMistakesPage />} />
+              <Route path="/statistics" element={<StatisticsPage />} />
+            </Routes>
+          )}
+        </div>
       </div>
     </Router>
   );
 };
+
