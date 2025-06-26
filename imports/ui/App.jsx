@@ -145,14 +145,6 @@ export const App = () => {
           {!formOpen && <span> ⬇️</span>}
           </h2>
 
-        <Input
-          type="search"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          placeholder="Search Mistakes..."
-          className="border rounded p-2 ml-4 max-w-md"
-        />
-
         {formOpen && <div className="border-2 border-gray-300 p-3 mb-3 inline-block rounded-xl ml-4" 
             style={{maxWidth: '650px', width: '100%'}}>
           <div className="block mb-4">
@@ -210,6 +202,14 @@ export const App = () => {
             )}
           </div>
         </div>}
+
+        <Input
+          type="search"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+          placeholder="Search Mistakes..."
+          className="border rounded p-2 ml-4 max-w-md block"
+        />
         
         <div className="block mt-4 ml-4">
           <Button className="bg-gray-500 text-white" onClick={() => setShowAll(x => !x)}>
