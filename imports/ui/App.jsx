@@ -2,11 +2,12 @@ import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { useTracker } from 'meteor/react-meteor-data';
 import { AccountsUIWrapper } from './AccountsUIWrapper';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { DashboardPage } from './pages/DashboardPage';
 import { AddMistakePage } from './pages/AddMistakePage';
 import { EditMistakePage } from './pages/EditMistakePage';
 import { ListMistakesPage } from './pages/ListMistakesPage';
+import { StatisticsPage } from './pages/StatisticsPage';
 import { Navbar } from './Navbar';
 
 export const App = () => {
@@ -28,6 +29,7 @@ export const App = () => {
             <Route path="/add" element={<AddMistakePage />} />
             <Route path="/edit/:id" element={<EditMistakePage />} />
             <Route path="/list" element={<ListMistakesPage />} />
+            <Route path="/statistics" element={<StatisticsPage />} />
           </Routes>
         </div>}
       </div>

@@ -8,7 +8,7 @@ export const Navbar = () => {
           <a href="/" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Dashboard</a>
           <a href="/add" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Add Mistake</a>
           <a href="/list" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Mistakes List</a>
-          <a href="#" className="text-gray-500 px-3 py-2 rounded-md text-sm font-medium cursor-not-allowed hover:opacity-80">Statistics</a>
+          <a href="/statistics" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Statistics</a>
           <a href="https://ko-fi.com/itsmatteodemicheli" className="text-white px-3 py-2 rounded-md text-sm font-medium hover:opacity-80">Donate</a>
         </div>
       </div>
