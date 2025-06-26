@@ -2,7 +2,7 @@ export const getObjectTagsForList = (list) => {
   return list.map((value) => {
     return {
       value,
-      label: findTag(value)?.label
+      label: findTag(value)?.label || value
     }
   }, [])
 }
