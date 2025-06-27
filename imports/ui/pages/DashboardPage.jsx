@@ -87,7 +87,7 @@ export const DashboardPage = () => {
         <div className="flex-grow mt-6 md:mt-0 md:ml-12 w-full">
           {!showMistake && (
             <div className="text-center md:text-left">
-              <span className="text-xl font-semibold text-gray-800 ">I know the answer&nbsp;</span>
+              <span className="text-xl font-semibold text-gray-800 ">I know the answer</span>
               <div className="mt-4 space-x-4">
                 <Button className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 transition-colors duration-200 text-lg" onClick={() => onReview(mistake._id, true)}><FaCheck className="inline-block mr-2" />Correct</Button>
                 <Button className="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition-colors duration-200 text-lg" onClick={() => onReview(mistake._id, false)}><FaTimes className="inline-block mr-2" />Wrong</Button>
